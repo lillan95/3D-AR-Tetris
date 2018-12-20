@@ -33,8 +33,8 @@ public class Grid : MonoBehaviour {
 				grid[x, z, y-1] = grid[x, z, y];
 				grid[x, z, y] = null;
 
-				// Update Block position
-				grid[x, z, y-1].position += new Vector3(0, -1, 0);
+				// Update Block localPosition
+				grid[x, z, y-1].localPosition += new Vector3(0, -1, 0);
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class Grid : MonoBehaviour {
 
 	public static bool fullRow(int y, int z) {
 		for (int x = 0; x < w; ++x){
-			
+
 			if (grid [x, z, y] == null)
 				return false;
 		}
@@ -75,30 +75,30 @@ public class Grid : MonoBehaviour {
 			decreaseRowY(i, x);
 	}
 
-	public static void decreaseRowY(int y, int x) { 
+	public static void decreaseRowY(int y, int x) {
 		for (int z = 0; z < d; ++z) {
 			if (grid[x, z, y] != null) {
 				// Move one towards bottom
 				grid[x, z, y-1] = grid[x, z, y];
 				grid[x, z, y] = null;
 
-				// Update Block position
-				grid[x, z, y-1].position += new Vector3(0, -1, 0);
+				// Update Block localPosition
+				grid[x, z, y-1].localPosition += new Vector3(0, -1, 0);
 			}
 		}
 	}
 
 
-	public static void deleteFullRows() { 
-		//Debug.Log("DELETE FULL ROWS" ); 
-		for (int x = 0; x < d; ++x) {	
-			for (int z = 0; z < d; ++z) {			
+	public static void deleteFullRows() {
+		//Debug.Log("DELETE FULL ROWS" );
+		for (int x = 0; x < d; ++x) {
+			for (int z = 0; z < d; ++z) {
 				for (int y = 0; y < h; ++y) {
 					if (fullRow (y, z)) {
 						deleteRow (y, z);
 						moveDownRows (y + 1, z);
 						--y;
-					} 
+					}
 
 					if (fullRowY (y, x)){
 						//Debug.Log ("fullrow");

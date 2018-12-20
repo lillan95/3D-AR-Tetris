@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Vuforia;
 
 public class Spawner : MonoBehaviour {
 
 	// Groups
 	public GameObject[] groups;
+	public GameObject Origin;
 
 
 	public void spawnNewBlock() {
@@ -12,9 +14,10 @@ public class Spawner : MonoBehaviour {
 		int i = Random.Range(0, groups.Length);
 
 		// Spawn Group at current Position
-		Instantiate(groups[i],
-			transform.position,
-			Quaternion.identity);
+		var block = Instantiate(groups[i],
+					transform.position,
+				  transform.rotation);
+		block.transform.parent = Origin.transform;
 	}
 
 	void Start() {
@@ -22,6 +25,13 @@ public class Spawner : MonoBehaviour {
 		spawnNewBlock();
 	}
 
+	private bool isTrackingMarker()
+    {
+        var imageTarget = GameObject.Find("ImageTarget");
+        var trackable = imageTarget.GetComponent<TrackableBehaviour>();
+        var status = trackable.CurrentStatus;
+        return status == TrackableBehaviour.Status.TRACKED;
+    }
+
 
 }
-

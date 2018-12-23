@@ -6,7 +6,7 @@ public class Group : MonoBehaviour {
 	float lastFall = 0;
 	public GameObject origin;
 	public GameObject imageTarget;
-    private Quaternion localRotation; // 
+    private Quaternion localRotation; //
     public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
 
     // Use this for initializations
@@ -49,28 +49,28 @@ public class Group : MonoBehaviour {
                     if (Input.acceleration.x < -0.9)
                     {
                         direction = "Forward";
-                        localRotation.x = -1;
+                        //localRotation.x = -1;
                     }
                     else if (Input.acceleration.x > 0.9)
                     {
                         direction = "Backward";
-                        localRotation.x = 1;
+                        //localRotation.x = 1;
                     }
 
                     if (Input.acceleration.z < -0.9)
                     {
                         direction = "Left";
-                        localRotation.z = -1;
-                    } 
+                        //localRotation.z = -1;
+                    }
                     else if(Input.acceleration.z > 0.9)
                     {
                         direction = "Right";
-                        localRotation.z = 1;
+                        //localRotation.z = 1;
                     }
 
                     break;
                 case TouchPhase.Ended:
-                    transform.rotation = localRotation;
+                    //transform.rotation = localRotation;
                     //material.color = Color.white;
                     break;
             }
@@ -79,92 +79,314 @@ public class Group : MonoBehaviour {
         }
         return direction;
     }
-    void Update() {
-        getMoveDirection();
-        if (isTrackingMarker()){
-			// Move Left
-			if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-				transform.localPosition += new Vector3(-1, 0, 0);
 
-				if (isValidGridPos())
-					updateGrid();
+		void controlArrows() {
+		// Move Left
+		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+			transform.localPosition += new Vector3(-1, 0, 0);
 
-				else
-					transform.localPosition += new Vector3(1, 0, 0);
-			}
+			if (isValidGridPos())
+				updateGrid();
 
-			else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-
+			else
 				transform.localPosition += new Vector3(1, 0, 0);
+		}
 
-				if (isValidGridPos())
-					updateGrid();
+		else if (Input.GetKeyDown(KeyCode.RightArrow)) {
 
-				else
-					transform.localPosition += new Vector3(-1, 0, 0);
-			}
+			transform.localPosition += new Vector3(1, 0, 0);
 
-			// Move Front
-			else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+			if (isValidGridPos())
+				updateGrid();
 
-				transform.localPosition += new Vector3(0, 0, -1);
+			else
+				transform.localPosition += new Vector3(-1, 0, 0);
+		}
 
-				if (isValidGridPos ()) {
-					updateGrid ();
-				} else {
-					transform.localPosition += new Vector3 (0, 0, 1);
-				}
-			}
+		// Move Front
+		else if (Input.GetKeyDown(KeyCode.UpArrow)) {
 
+			transform.localPosition += new Vector3(0, 0, 1);
 
-
-			// Move Back
-			else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-
-				transform.localPosition += new Vector3(0, 0, 1);
-
-				if (isValidGridPos()){
-					updateGrid();}
-
-				else{
-					transform.localPosition += new Vector3(0, 0, -1);
-				}
-			}
-
-			// Rotate
-			else if (Input.GetKeyDown(KeyCode.Space)) {
-				transform.Rotate(0, 0, -90);
-
-				if (isValidGridPos())
-					updateGrid();
-
-				else
-					transform.Rotate(0, 0, 90);
-			}
-
-			// Move Downwards and Fall
-			else if (Input.GetKeyDown(KeyCode.R) ||
-				Time.time - lastFall >= 1) {
-				transform.localPosition += new Vector3(0, -1, 0);
-
-				if (isValidGridPos()) {
-					updateGrid();
-				} else {
-					transform.localPosition += new Vector3(0, 1, 0);
-					//Debug.Log ("Delete row initiate! ");
-					// Clear filled horizontal lines
-					Grid.deleteFullRows();
-
-					// Spawn next Group
-					FindObjectOfType<Spawner>().spawnNewBlock();
-
-					// Disable script
-					enabled = false;
-				}
-
-				lastFall = Time.time;
+			if (isValidGridPos ()) {
+				updateGrid ();
+			} else {
+				transform.localPosition += new Vector3 (0, 0, -1);
 			}
 		}
+
+
+
+		// Move Back
+		else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+
+			transform.localPosition += new Vector3(0, 0, -1);
+
+			if (isValidGridPos()){
+				updateGrid();}
+
+			else{
+				transform.localPosition += new Vector3(0, 0, 1);
+			}
+		}
+
+		// Rotate
+		else if (Input.GetKeyDown(KeyCode.Space)) {
+			transform.Rotate(0, 0, -90);
+
+			if (isValidGridPos())
+				updateGrid();
+
+			else
+				transform.Rotate(0, 0, 90);
+		}
+
+		// Move Downwards and Fall
+		else if (Input.GetKeyDown(KeyCode.R) ||
+			Time.time - lastFall >= 1) {
+			transform.localPosition += new Vector3(0, -1, 0);
+
+			if (isValidGridPos()) {
+				updateGrid();
+			} else {
+				transform.localPosition += new Vector3(0, 1, 0);
+				//Debug.Log ("Delete row initiate! ");
+				// Clear filled horizontal lines
+				Grid.deleteFullRows();
+
+				// Spawn next Group
+				FindObjectOfType<Spawner>().spawnNewBlock();
+
+				// Disable script
+				enabled = false;
+			}
+
+			lastFall = Time.time;
+		}
+}
+
+void rightOrientationGesture(string direction){
+	// Move Forward
+	if (direction == "Left") {
+		transform.localPosition += new Vector3(-1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(1, 0, 0);
+	}
+
+	else if (direction == "Right") {
+
+		transform.localPosition += new Vector3(1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(-1, 0, 0);
+	}
+
+	// Move Left
+	else if (direction == "Backward") {
+
+		transform.localPosition += new Vector3(0, 0, 1);
+
+		if (isValidGridPos ()) {
+			updateGrid ();
+		} else {
+			transform.localPosition += new Vector3 (0, 0, -1);
+		}
+	}
+
+	// Move Right
+	else if (direction == "Forward") {
+
+		transform.localPosition += new Vector3(0, 0, -1);
+
+		if (isValidGridPos()){
+			updateGrid();}
+
+		else{
+			transform.localPosition += new Vector3(0, 0, 1);
+		}
+	}
+}
+
+void frontOrientationGesture(string direction){
+	// Move Forward
+	if (direction == "Forward") {
+		transform.localPosition += new Vector3(-1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(1, 0, 0);
+	}
+
+	else if (direction == "Backward") {
+
+		transform.localPosition += new Vector3(1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(-1, 0, 0);
+	}
+
+	// Move Left
+	else if (direction == "Left") {
+
+		transform.localPosition += new Vector3(0, 0, 1);
+
+		if (isValidGridPos ()) {
+			updateGrid ();
+		} else {
+			transform.localPosition += new Vector3 (0, 0, -1);
+		}
+	}
+
+	// Move Right
+	else if (direction == "Right") {
+
+		transform.localPosition += new Vector3(0, 0, -1);
+
+		if (isValidGridPos()){
+			updateGrid();}
+
+		else{
+			transform.localPosition += new Vector3(0, 0, 1);
+		}
+	}
+}
+
+void leftOrientationGesture(string direction){
+	// Move Forward
+	if (direction == "Right") {
+		transform.localPosition += new Vector3(-1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(1, 0, 0);
+	}
+
+	else if (direction == "Left") {
+
+		transform.localPosition += new Vector3(1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(-1, 0, 0);
+	}
+
+	// Move Left
+	else if (direction == "Forward") {
+
+		transform.localPosition += new Vector3(0, 0, 1);
+
+		if (isValidGridPos ()) {
+			updateGrid ();
+		} else {
+			transform.localPosition += new Vector3 (0, 0, -1);
+		}
+	}
+
+	// Move Right
+	else if (direction == "Backward") {
+
+		transform.localPosition += new Vector3(0, 0, -1);
+
+		if (isValidGridPos()){
+			updateGrid();}
+
+		else{
+			transform.localPosition += new Vector3(0, 0, 1);
+		}
+	}
+}
+
+void backOrientationGesture(string direction){
+	// Move Forward
+	if (direction == "Backward") {
+		transform.localPosition += new Vector3(-1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(1, 0, 0);
+	}
+
+	else if (direction == "Forward") {
+
+		transform.localPosition += new Vector3(1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(-1, 0, 0);
+	}
+
+	// Move Left
+	else if (direction == "Right") {
+
+		transform.localPosition += new Vector3(0, 0, 1);
+
+		if (isValidGridPos ()) {
+			updateGrid ();
+		} else {
+			transform.localPosition += new Vector3 (0, 0, -1);
+		}
+	}
+
+	// Move Right
+	else if (direction == "Left") {
+
+		transform.localPosition += new Vector3(0, 0, -1);
+
+		if (isValidGridPos()){
+			updateGrid();}
+
+		else{
+			transform.localPosition += new Vector3(0, 0, 1);
+		}
+	}
+}
+
+void controlGestures(){
+	string direction = getMoveDirection();
+	switch(getOrientation()){
+		case "Right":
+		rightOrientationGesture(direction);
+		break;
+
+		case "Front":
+		frontOrientationGesture(direction);
+		break;
+
+		case "Left":
+		leftOrientationGesture(direction);
+		break;
+
+		case "Back":
+		backOrientationGesture(direction);
+		break;
+	}
+}
+
+    void Update() {
+			if (isTrackingMarker()){
+				controlArrows();
+				controlGestures();
+			}
 	}
 
 	bool isValidGridPos() {        // 2D So far

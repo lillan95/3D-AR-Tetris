@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-/Users/yipeitu/Desktop/DT2140-Multimodal Interaction/Project/3D-AR-Tetris/tetris.apk
+C:/Users/ahmad/Google Drive/University/KTH/Period 2/Multimodal Interaction/Tetris/tetris github/3D-AR-Tetris/tetris.apk
 SceneListBegin?
 Assets/Multi_tetris.unity
 SceneListEnd?

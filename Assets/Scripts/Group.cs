@@ -6,15 +6,18 @@ public class Group : MonoBehaviour {
 	float lastFall = 0;
 	public GameObject origin;
 	public GameObject imageTarget;
+    private Quaternion localRotation; // 
+    public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
 
-	// Use this for initializations
-	void Start () {
+    // Use this for initializations
+    void Start () {
 
 		 origin =  GameObject.Find("/ImageTarget/Plane/Origin");
 		 imageTarget = GameObject.Find("/ImageTarget");
-
-		// Default localPosition not valid? Then it's game over
-	if (!isValidGridPos()) {
+         // copy the rotation of the object itself into a buffer
+         localRotation = transform.rotation;
+        // Default localPosition not valid? Then it's game over
+        if (!isValidGridPos()) {
 			//Debug.Log("GAME OVER");
 			Destroy(gameObject);
 		}
@@ -29,9 +32,56 @@ public class Group : MonoBehaviour {
 			else return "Error";
 	}
 
-	void Update() {
+    string getMoveDirection()
+    {
+        //Renderer rend = origin.GetComponent<Renderer>();
+        //Create a new Material
+        //Material material = new Material(Shader.Find("Standard"));
+        string direction = "";
+        if (Input.touchCount > 0)
+        {
+            switch (Input.GetTouch(0).phase)
+            {
+                case TouchPhase.Began:
+                case TouchPhase.Moved:
+                    //material.color = Color.green;
 
-		if(isTrackingMarker()){
+                    if (Input.acceleration.x < -0.9)
+                    {
+                        direction = "Forward";
+                        localRotation.x = -1;
+                    }
+                    else if (Input.acceleration.x > 0.9)
+                    {
+                        direction = "Backward";
+                        localRotation.x = 1;
+                    }
+
+                    if (Input.acceleration.z < -0.9)
+                    {
+                        direction = "Left";
+                        localRotation.z = -1;
+                    } 
+                    else if(Input.acceleration.z > 0.9)
+                    {
+                        direction = "Right";
+                        localRotation.z = 1;
+                    }
+
+                    break;
+                case TouchPhase.Ended:
+                    transform.rotation = localRotation;
+                    //material.color = Color.white;
+                    break;
+            }
+            //Switch to new material
+            //rend.material = material;
+        }
+        return direction;
+    }
+    void Update() {
+        getMoveDirection();
+        if (isTrackingMarker()){
 			// Move Left
 			if (Input.GetKeyDown(KeyCode.LeftArrow)) {
 				transform.localPosition += new Vector3(-1, 0, 0);

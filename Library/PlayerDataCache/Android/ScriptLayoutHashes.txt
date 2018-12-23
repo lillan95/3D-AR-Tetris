@@ -1,6 +1,6 @@
 Android
 PlayerPath?
-C:/Users/ahmad/Google Drive/University/KTH/Period 2/Multimodal Interaction/Tetris/tetris vuforia/tetris/tetris.apk
+/Users/yipeitu/Desktop/DT2140-Multimodal Interaction/Project/3D-AR-Tetris/tetris.apk
 SceneListBegin?
 Assets/Multi_tetris.unity
 SceneListEnd?
@@ -208,7 +208,7 @@ da21fc3f8056b1f91c3dd09c7bf4f90a UnityEngine.Networking.dll:UnityEngine.Networki
 529a95e9e8e7686c4816e08fbb37183f UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransform
 fc061f3ae8a876c0687e86378d4a447c UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformChild
 7ca56e063bd071986fff4f513cc4f477 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkTransformVisualizer
-7face4b9a90c2e266d4f08465ebb8f99 Assembly-CSharp.dll:.Group
+ee31d87f3603ab355de12249b2cc99bf Assembly-CSharp.dll:.Group
 72a8523b432c0a5317826b7a9e0a0e79 Unity.TextMeshPro.dll:TMPro.PackageResourceImporterWindow
 486cd95c82d8305219c352c06b776e1f VuforiaScripts.dll:.DefaultTrackableEventHandler
 e53cc67d84060d628c7f03fc725766d8 Unity.TextMeshPro.dll:TMPro.TMP_FontAsset

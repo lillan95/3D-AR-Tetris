@@ -29,6 +29,7 @@ public class Group : MonoBehaviour {
 	private int _recordingHZ = 22050;
 	private SpeechToText _service;
 	private string transcript;
+	private string command;
 
     // Use this for initializations
     void Start () {
@@ -520,7 +521,7 @@ void controlGestures(){
 				_service.MaxAlternatives = 0;
 				_service.EnableInterimResults = true;
 				_service.OnError = OnError;
-				_service.InactivityTimeout = 1;
+				_service.InactivityTimeout = -1;
 				//_service.WordAlternativesThreshold = null;
 				_service.StartListening(OnRecognize);
 			}
@@ -623,26 +624,46 @@ void controlGestures(){
 			foreach (var res in result.results)
 			{
 				foreach (var alt in res.alternatives)
-				{	counter++;
+				{	
+					counter++;
 					Debug.Log ("counter: " + counter);
-					voiceControl ("Left");
+					//voiceControl ("Left");
 					//Debug.Log ();
-					transcript = alt.transcript;
+					if (res.final) {
+						transcript = alt.transcript;
+					} else {
+						transcript = "";
+					}
 					Debug.Log (transcript);
 					string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
 					Log.Debug("ExampleStreaming.OnRecognize()", text);
 					//ResultsField.text = text;
 
-					if (transcript.Contains ("move left")) {
+					if (transcript.Contains ("left")) {
+						//command = "Left";
+						//break;
 						voiceControl ("Left");
-					} else if (transcript.Contains ("move right")) {
+						break;
+					} else if (transcript.Contains ("right")) {
+						//command = "Right";
+						//break;
 						voiceControl ("Right");
-					} else if (transcript.Contains ("move forward")) {
+						break;
+					} else if (transcript.Contains ("forward")) {
+						//command = "Forward";
+						//break;
 						voiceControl ("Forward");
-					} else if (transcript.Contains ("move back")) {
+						break;
+					} else if (transcript.Contains ("back")) {
+						//command = "Back";
+						//break;
 						voiceControl ("Backward");
+						break;
 					} else if (transcript.Contains ("rotate")) {
+						//command = "Rotate";
+						//break;
 						voiceControl ("Rotate");
+						break;
 					}
 				}
 
@@ -656,24 +677,28 @@ void controlGestures(){
 			}
 		}
 	}
-
+		
 	void voiceControl(string command){
 			Debug.Log ("command: " + command);
 			switch (getOrientation ()) {
-			case "Right":
-				rightOrientationGesture (command);
+		case "Right":
+			rightOrientationGesture (command);
+			command = "";
 				break;
 
-			case "Front":
-				frontOrientationGesture (command);
+		case "Front":
+			frontOrientationGesture (command);
+			command = "";
 				break;
 
-			case "Left":
-				leftOrientationGesture (command);
+		case "Left":
+			leftOrientationGesture (command);
+			command = "";
 				break;
 
-			case "Back":
-				backOrientationGesture (command);
+		case "Back":
+			backOrientationGesture (command);
+			command = "";
 				break;
 			case "Rotate":
 				transform.Rotate (0, 0, -90);

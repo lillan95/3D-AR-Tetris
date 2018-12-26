@@ -33,6 +33,8 @@ public class Group : MonoBehaviour {
     // Use this for initializations
     void Start () {
 
+			Spawner.blockCount++;
+
 		 origin =  GameObject.Find("/ImageTarget/Plane/Origin");
 		 imageTarget = GameObject.Find("/ImageTarget");
          // copy the rotation of the object itself into a buffer
@@ -167,7 +169,7 @@ public class Group : MonoBehaviour {
 
 		// Move Downwards and Fall
 		else if (Input.GetKeyDown(KeyCode.R) ||
-			Time.time - lastFall >= 1) {
+			Time.time - lastFall >= 2.0/Spawner.blockCount) {
 			transform.localPosition += new Vector3(0, -1, 0);
 
 			if (isValidGridPos()) {
@@ -497,7 +499,7 @@ void controlGestures(){
 		//  Wait for tokendata
 		while (!credentials.HasIamTokenData())
 		yield return null;
-		
+
 		_service = new SpeechToText(credentials);
 		_service.StreamMultipart = true;
 
@@ -600,7 +602,7 @@ void controlGestures(){
 			}
 			else
 			{
-				// calculate the number of samples remaining until we ready for a block of audio, 
+				// calculate the number of samples remaining until we ready for a block of audio,
 				// and wait that amount of time it will take to record.
 				int remaining = bFirstBlock ? (midPoint - writePos) : (_recording.samples - writePos);
 				float timeRemaining = (float)remaining / (float)_recordingHZ;
@@ -624,7 +626,7 @@ void controlGestures(){
 				{	counter++;
 					Debug.Log ("counter: " + counter);
 					voiceControl ("Left");
-					Debug.Log ();
+					//Debug.Log ();
 					transcript = alt.transcript;
 					Debug.Log (transcript);
 					string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
@@ -683,5 +685,5 @@ void controlGestures(){
 				break;
 			}
 	}
-		
+
 }

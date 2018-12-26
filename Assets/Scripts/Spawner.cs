@@ -7,6 +7,7 @@ public class Spawner : MonoBehaviour {
 	// Groups
 	public GameObject[] groups;
 	public GameObject Origin;
+	public static double blockCount = 0.0;
 
 
 	public void spawnNewBlock() {

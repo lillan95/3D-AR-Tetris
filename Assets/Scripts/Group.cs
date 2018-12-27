@@ -14,6 +14,7 @@ public class Group : MonoBehaviour {
 	public GameObject imageTarget;
     private Quaternion localRotation; //
     public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
+		private string pastDirection;
 
 
 	//Credentials for voice recognition service
@@ -390,30 +391,33 @@ void backOrientationGesture(string direction){
 
 void controlGestures(){
 	string direction = getMoveDirection();
-	switch(getOrientation()){
-		case "Right":
-		rightOrientationGesture(direction);
-		break;
+	if(pastDirection == ""){
+		switch(getOrientation()){
+			case "Right":
+			rightOrientationGesture(direction);
+			break;
 
-		case "Front":
-		frontOrientationGesture(direction);
-		break;
+			case "Front":
+			frontOrientationGesture(direction);
+			break;
 
-		case "Left":
-		leftOrientationGesture(direction);
-		break;
+			case "Left":
+			leftOrientationGesture(direction);
+			break;
 
-		case "Back":
-		backOrientationGesture(direction);
-		break;
+			case "Back":
+			backOrientationGesture(direction);
+			break;
+		}
 	}
+		pastDirection = direction;
 }
 
     void Update() {
 			if (isTrackingMarker()){
 				controlArrows();
-				controlGestures();
 			}
+			controlGestures();
 	}
 
 	bool isValidGridPos() {        // 2D So far
@@ -624,7 +628,7 @@ void controlGestures(){
 			foreach (var res in result.results)
 			{
 				foreach (var alt in res.alternatives)
-				{	
+				{
 					counter++;
 					Debug.Log ("counter: " + counter);
 					//voiceControl ("Left");
@@ -677,7 +681,7 @@ void controlGestures(){
 			}
 		}
 	}
-		
+
 	void voiceControl(string command){
 			Debug.Log ("command: " + command);
 			switch (getOrientation ()) {

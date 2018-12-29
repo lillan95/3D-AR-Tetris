@@ -7,6 +7,7 @@ using IBM.Watson.DeveloperCloud.Utilities;
 using IBM.Watson.DeveloperCloud.DataTypes;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 public class Group : MonoBehaviour {
 	float lastFall = 0;
@@ -18,7 +19,7 @@ public class Group : MonoBehaviour {
 
 
 	//Credentials for voice recognition service
-	private string apiKey = "h87ZRSCl_NqRNLDJ2aVfNA2UYnvPL7EGwhCgXr-l9Q_w";
+	private string apiKey = "gNgYDJHEX3s5pihSZ0RJtvaqSOXj56JsGehM3iiatHFv";
 	private string serviceURL = "https://stream.watsonplatform.net/speech-to-text/api";
 	private string iamURL = "";
 
@@ -526,7 +527,7 @@ void controlGestures(){
 				_service.EnableInterimResults = true;
 				_service.OnError = OnError;
 				_service.InactivityTimeout = -1;
-				//_service.WordAlternativesThreshold = null;
+				//_service.WordAlternativesThreshold = 0.5f;
 				_service.StartListening(OnRecognize);
 			}
 			else if (!value && _service.IsListening)
@@ -624,15 +625,10 @@ void controlGestures(){
 	{
 		if (result != null && result.results.Length > 0)
 		{
-			int counter = 0;
 			foreach (var res in result.results)
 			{
 				foreach (var alt in res.alternatives)
 				{
-					counter++;
-					Debug.Log ("counter: " + counter);
-					//voiceControl ("Left");
-					//Debug.Log ();
 					if (res.final) {
 						transcript = alt.transcript;
 					} else {
@@ -646,27 +642,29 @@ void controlGestures(){
 					if (transcript.Contains ("left")) {
 						//command = "Left";
 						//break;
-						voiceControl ("Left");
+						foreach (Match match in Regex.Matches(transcript, "left")) {
+							voiceControl ("Left");
+						}
 						break;
 					} else if (transcript.Contains ("right")) {
-						//command = "Right";
-						//break;
-						voiceControl ("Right");
+						foreach (Match match in Regex.Matches(transcript, "right")) {
+							voiceControl ("Right");
+						}
 						break;
 					} else if (transcript.Contains ("forward")) {
-						//command = "Forward";
-						//break;
-						voiceControl ("Forward");
+						foreach (Match match in Regex.Matches(transcript, "forward")) {
+							voiceControl ("Forward");
+						}
 						break;
 					} else if (transcript.Contains ("back")) {
-						//command = "Back";
-						//break;
-						voiceControl ("Backward");
+						foreach (Match match in Regex.Matches(transcript, "back")) {
+							voiceControl ("Right");
+						}
 						break;
 					} else if (transcript.Contains ("rotate")) {
-						//command = "Rotate";
-						//break;
-						voiceControl ("Rotate");
+						foreach (Match match in Regex.Matches(transcript, "rotate")) {
+							voiceControl ("Rotate");
+						}
 						break;
 					}
 				}

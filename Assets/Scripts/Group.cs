@@ -28,6 +28,7 @@ public class Group : MonoBehaviour {
 	private string _microphoneID = null;
 	private AudioClip _recording = null;
 	private int _recordingBufferSize = 1;
+	//private int _recordingHZ = 22050;
 	private int _recordingHZ = 22050;
 	private SpeechToText _service;
 	private string transcript;
@@ -520,15 +521,20 @@ void controlGestures(){
 		{
 			if (value && !_service.IsListening)
 			{
-				//_service.RecognizeModel = (string.IsNullOrEmpty(_recognizeModel) ? "en-US_BroadbandModel" : _recognizeModel);
+				_service.RecognizeModel = "en-US_BroadbandModel";
 				_service.DetectSilence = true;
 				_service.SilenceThreshold = 0.01f;
-				_service.MaxAlternatives = 0;
+				_service.MaxAlternatives = 5;
 				_service.EnableInterimResults = true;
 				_service.OnError = OnError;
 				_service.InactivityTimeout = -1;
 				//_service.WordAlternativesThreshold = 0.5f;
 				_service.StartListening(OnRecognize);
+
+				string[] commandKey = {"north", "east", "south", "west", "rotate"};
+				_service.Keywords = commandKey;
+				_service.KeywordsThreshold = 0.1f;
+
 			}
 			else if (!value && _service.IsListening)
 			{
@@ -567,6 +573,7 @@ void controlGestures(){
 	{
 		Log.Debug("ExampleStreaming.RecordingHandler()", "devices: {0}", Microphone.devices);
 		_recording = Microphone.Start(_microphoneID, true, _recordingBufferSize, _recordingHZ);
+
 		yield return null;      // let _recordingRoutine get set..
 
 		if (_recording == null)
@@ -574,9 +581,11 @@ void controlGestures(){
 			StopRecording();
 			yield break;
 		}
-
+			
 		bool bFirstBlock = true;
 		int midPoint = _recording.samples / 2;
+		Debug.Log ("recording sample: " + _recording.samples + ", Midpoint: " + midPoint);
+		//int midPoint = _recording.samples;
 		float[] samples = null;
 
 		while (_recordingRoutine != 0 && _recording != null)
@@ -589,6 +598,7 @@ void controlGestures(){
 				StopRecording();
 				yield break;
 			}
+
 
 			if ((bFirstBlock && writePos >= midPoint)
 				|| (!bFirstBlock && writePos < midPoint))
@@ -616,6 +626,7 @@ void controlGestures(){
 				yield return new WaitForSeconds(timeRemaining);
 			}
 
+
 		}
 
 		yield break;
@@ -628,7 +639,9 @@ void controlGestures(){
 			foreach (var res in result.results)
 			{
 				foreach (var alt in res.alternatives)
-				{
+				{/*
+					Debug.Log ("transcript: " + alt.transcript);
+
 					if (res.final) {
 						transcript = alt.transcript;
 					} else {
@@ -666,16 +679,43 @@ void controlGestures(){
 							voiceControl ("Rotate");
 						}
 						break;
-					}
+					}*/
 				}
 
-				/*if (res.keywords_result != null && res.keywords_result.keyword != null)
+				if (res.keywords_result != null && res.keywords_result.keyword != null)
 				{
+					string keywordlist = "";
 					foreach (var keyword in res.keywords_result.keyword)
 					{
-						Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+						keywordlist = keyword.normalized_text;
+						Debug.Log ("keyword list: " + keywordlist);
+						Debug.Log ("confidence: " + keyword.confidence);
+						if(keyword.confidence>0.2){
+							if (keywordlist.Contains ("east")) {
+								Debug.Log ("keyword: " + keywordlist);
+								voiceControl ("Right");
+								keywordlist = "";
+							} else if(keywordlist.Contains ("west")){
+								Debug.Log ("keyword: " + keywordlist);
+								voiceControl ("Left");
+								keywordlist = "";
+							} else if(keywordlist.Contains ("north")){
+								Debug.Log ("keyword: " + keywordlist);
+								voiceControl ("Front");
+								keywordlist = "";
+							} else if(keywordlist.Contains ("south")){
+								Debug.Log ("keyword: " + keywordlist);
+								voiceControl ("Back");
+								keywordlist = "";
+							} else if(keywordlist.Contains ("rotate")){
+								Debug.Log ("keyword: " + keywordlist);
+								voiceControl ("Rotate");
+								keywordlist = "";
+							}
+						}
+							//Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
 					}
-				}*/
+				}
 			}
 		}
 	}

@@ -172,8 +172,9 @@ public class Group : MonoBehaviour {
 		}
 
 		// Move Downwards and Fall
+		//replace 1.0 with 2.0/Spawner.blockCount for speeding up
 		else if (Input.GetKeyDown(KeyCode.R) ||
-			Time.time - lastFall >= 2.0/Spawner.blockCount) {
+			Time.time - lastFall >= 1.0) {
 			transform.localPosition += new Vector3(0, -1, 0);
 
 			if (isValidGridPos()) {
@@ -581,7 +582,7 @@ void controlGestures(){
 			StopRecording();
 			yield break;
 		}
-			
+
 		bool bFirstBlock = true;
 		int midPoint = _recording.samples / 2;
 		Debug.Log ("recording sample: " + _recording.samples + ", Midpoint: " + midPoint);

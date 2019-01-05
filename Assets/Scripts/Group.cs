@@ -27,7 +27,7 @@ public class Group : MonoBehaviour {
 	private int _recordingRoutine = 0;
 	private string _microphoneID = null;
 	private AudioClip _recording = null;
-	private int _recordingBufferSize = 1;
+	private int _recordingBufferSize = 2;
 	//private int _recordingHZ = 22050;
 	private int _recordingHZ = 22050;
 	private SpeechToText _service;
@@ -533,7 +533,7 @@ void controlGestures(){
 
 				string[] commandKey = {"north", "east", "south", "west", "rotate"};
 				_service.Keywords = commandKey;
-				_service.KeywordsThreshold = 0.1f;
+				_service.KeywordsThreshold = 0.01f;
 
 			}
 			else if (!value && _service.IsListening)

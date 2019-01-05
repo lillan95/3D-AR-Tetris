@@ -691,7 +691,7 @@ void controlGestures(){
 						keywordlist = keyword.normalized_text;
 						Debug.Log ("keyword list: " + keywordlist);
 						Debug.Log ("confidence: " + keyword.confidence);
-						if(keyword.confidence>0.2){
+						//if(keyword.confidence>0.2){
 							if (keywordlist.Contains ("east")) {
 								Debug.Log ("keyword: " + keywordlist);
 								voiceControl ("Right");
@@ -702,18 +702,23 @@ void controlGestures(){
 								keywordlist = "";
 							} else if(keywordlist.Contains ("north")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Front");
+								voiceControl ("Forward");
 								keywordlist = "";
 							} else if(keywordlist.Contains ("south")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Back");
+								voiceControl ("Backward");
 								keywordlist = "";
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Rotate");
+								transform.Rotate (0, 0, -90);
+
+								if (isValidGridPos ())
+									updateGrid ();
+								else
+									transform.Rotate (0, 0, 90);
 								keywordlist = "";
 							}
-						}
+						//}
 							//Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
 					}
 				}
@@ -742,14 +747,6 @@ void controlGestures(){
 		case "Back":
 			backOrientationGesture (command);
 			command = "";
-				break;
-			case "Rotate":
-				transform.Rotate (0, 0, -90);
-
-				if (isValidGridPos ())
-					updateGrid ();
-				else
-					transform.Rotate (0, 0, 90);
 				break;
 			}
 	}

@@ -78,23 +78,23 @@ public class Group : MonoBehaviour {
 
                     if (Input.acceleration.x < -0.9)
                     {
-                        direction = "Forward";
+                        direction = "Left";
                         //localRotation.x = -1;
                     }
                     else if (Input.acceleration.x > 0.9)
                     {
-                        direction = "Backward";
+                        direction = "Right";
                         //localRotation.x = 1;
                     }
 
-                    if (Input.acceleration.z < -0.9)
+                    else if (Input.acceleration.z < -0.9)
                     {
-                        direction = "Left";
+                        direction = "Forward";
                         //localRotation.z = -1;
                     }
                     else if(Input.acceleration.z > 0.9)
                     {
-                        direction = "Right";
+                        direction = "Backward";
                         //localRotation.z = 1;
                     }
 
@@ -198,55 +198,6 @@ public class Group : MonoBehaviour {
 
 void rightOrientationGesture(string direction){
 	// Move Forward
-	if (direction == "Left") {
-		transform.localPosition += new Vector3(-1, 0, 0);
-
-		if (isValidGridPos())
-			updateGrid();
-
-		else
-			transform.localPosition += new Vector3(1, 0, 0);
-	}
-
-	else if (direction == "Right") {
-
-		transform.localPosition += new Vector3(1, 0, 0);
-
-		if (isValidGridPos())
-			updateGrid();
-
-		else
-			transform.localPosition += new Vector3(-1, 0, 0);
-	}
-
-	// Move Left
-	else if (direction == "Backward") {
-
-		transform.localPosition += new Vector3(0, 0, 1);
-
-		if (isValidGridPos ()) {
-			updateGrid ();
-		} else {
-			transform.localPosition += new Vector3 (0, 0, -1);
-		}
-	}
-
-	// Move Right
-	else if (direction == "Forward") {
-
-		transform.localPosition += new Vector3(0, 0, -1);
-
-		if (isValidGridPos()){
-			updateGrid();}
-
-		else{
-			transform.localPosition += new Vector3(0, 0, 1);
-		}
-	}
-}
-
-void frontOrientationGesture(string direction){
-	// Move Forward
 	if (direction == "Forward") {
 		transform.localPosition += new Vector3(-1, 0, 0);
 
@@ -269,7 +220,7 @@ void frontOrientationGesture(string direction){
 	}
 
 	// Move Left
-	else if (direction == "Left") {
+	else if (direction == "Right") {
 
 		transform.localPosition += new Vector3(0, 0, 1);
 
@@ -281,7 +232,7 @@ void frontOrientationGesture(string direction){
 	}
 
 	// Move Right
-	else if (direction == "Right") {
+	else if (direction == "Left") {
 
 		transform.localPosition += new Vector3(0, 0, -1);
 
@@ -294,9 +245,9 @@ void frontOrientationGesture(string direction){
 	}
 }
 
-void leftOrientationGesture(string direction){
+void frontOrientationGesture(string direction){
 	// Move Forward
-	if (direction == "Right") {
+	if (direction == "Left") {
 		transform.localPosition += new Vector3(-1, 0, 0);
 
 		if (isValidGridPos())
@@ -306,7 +257,7 @@ void leftOrientationGesture(string direction){
 			transform.localPosition += new Vector3(1, 0, 0);
 	}
 
-	else if (direction == "Left") {
+	else if (direction == "Right") {
 
 		transform.localPosition += new Vector3(1, 0, 0);
 
@@ -343,7 +294,7 @@ void leftOrientationGesture(string direction){
 	}
 }
 
-void backOrientationGesture(string direction){
+void leftOrientationGesture(string direction){
 	// Move Forward
 	if (direction == "Backward") {
 		transform.localPosition += new Vector3(-1, 0, 0);
@@ -367,7 +318,7 @@ void backOrientationGesture(string direction){
 	}
 
 	// Move Left
-	else if (direction == "Right") {
+	else if (direction == "Left") {
 
 		transform.localPosition += new Vector3(0, 0, 1);
 
@@ -379,7 +330,56 @@ void backOrientationGesture(string direction){
 	}
 
 	// Move Right
+	else if (direction == "Right") {
+
+		transform.localPosition += new Vector3(0, 0, -1);
+
+		if (isValidGridPos()){
+			updateGrid();}
+
+		else{
+			transform.localPosition += new Vector3(0, 0, 1);
+		}
+	}
+}
+
+void backOrientationGesture(string direction){
+	// Move Forward
+	if (direction == "Right") {
+		transform.localPosition += new Vector3(-1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(1, 0, 0);
+	}
+
 	else if (direction == "Left") {
+
+		transform.localPosition += new Vector3(1, 0, 0);
+
+		if (isValidGridPos())
+			updateGrid();
+
+		else
+			transform.localPosition += new Vector3(-1, 0, 0);
+	}
+
+	// Move Left
+	else if (direction == "Backward") {
+
+		transform.localPosition += new Vector3(0, 0, 1);
+
+		if (isValidGridPos ()) {
+			updateGrid ();
+		} else {
+			transform.localPosition += new Vector3 (0, 0, -1);
+		}
+	}
+
+	// Move Right
+	else if (direction == "Forward") {
 
 		transform.localPosition += new Vector3(0, 0, -1);
 
@@ -394,7 +394,7 @@ void backOrientationGesture(string direction){
 
 void controlGestures(){
 	string direction = getMoveDirection();
-	if(pastDirection == ""){
+	if(pastDirection == direction){
 		switch(getOrientation()){
 			case "Right":
 			rightOrientationGesture(direction);
@@ -691,7 +691,7 @@ void controlGestures(){
 						keywordlist = keyword.normalized_text;
 						Debug.Log ("keyword list: " + keywordlist);
 						Debug.Log ("confidence: " + keyword.confidence);
-						//if(keyword.confidence>0.2){
+						if(keyword.confidence>0.01){
 							if (keywordlist.Contains ("east")) {
 								Debug.Log ("keyword: " + keywordlist);
 								voiceControl ("Right");
@@ -718,7 +718,7 @@ void controlGestures(){
 									transform.Rotate (0, 0, 90);
 								keywordlist = "";
 							}
-						//}
+						}
 							//Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
 					}
 				}

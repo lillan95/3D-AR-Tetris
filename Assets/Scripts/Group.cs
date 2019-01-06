@@ -16,6 +16,7 @@ public class Group : MonoBehaviour {
     private Quaternion localRotation; //
     public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
 		private string pastDirection;
+		private int rotationCount = 0;
 
 
 	//Credentials for voice recognition service
@@ -114,24 +115,31 @@ public class Group : MonoBehaviour {
         return direction;
     }
 
-		void rotateObjectZ(){
-			transform.Rotate(0, 0, -90);
+		void rotateObject(){
 
-			if (isValidGridPos())
-				updateGrid();
+			if(rotationCount < 4){
+				transform.Rotate(0, 0, -90);
 
-			else
-				transform.Rotate(0, 0, 90);
-		}
+				if (isValidGridPos())
+					updateGrid();
 
-		void rotateObjectX(){
-			transform.Rotate(-90, 0, 0);
+				else
+					transform.Rotate(0, 0, 90);
+			}
 
-			if (isValidGridPos())
-				updateGrid();
+			else {
+				transform.Rotate(-90, 0, 0);
 
-			else
-				transform.Rotate(90, 0, 0);
+				if (isValidGridPos())
+					updateGrid();
+
+				else
+					transform.Rotate(90, 0, 0);
+
+				rotationCount = 0;
+			}
+
+			rotationCount++;
 		}
 
 		void controlArrows() {
@@ -186,11 +194,7 @@ public class Group : MonoBehaviour {
 
 		// Rotate
 		else if (Input.GetKeyDown(KeyCode.Space)) {
-			rotateObjectZ();
-		}
-
-		else if (Input.GetKeyDown(KeyCode.Backspace)){
-			rotateObjectX();
+			rotateObject();
 		}
 
 		// Move Downwards and Fall
@@ -733,7 +737,7 @@ void controlGestures(){
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
 
-								rotateObjectZ();
+								rotateObject();
 
 								keywordlist = "";
 							}

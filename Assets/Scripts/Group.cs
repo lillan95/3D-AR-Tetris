@@ -16,6 +16,7 @@ public class Group : MonoBehaviour {
     private Quaternion localRotation; //
     public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
 		private string pastDirection;
+		private int rotationCount = 0;
 
 
 	//Credentials for voice recognition service
@@ -93,8 +94,12 @@ public class Group : MonoBehaviour {
                         //material.color = Color.red;
                         //transform.localPosition = new Vector3(0.3f, 0, 0);
                     }
-
                     if (Input.acceleration.z < -0.8f)
+                    {
+                        // rotation
+                        rotateObject(); ;
+                    }
+                    else if (Input.acceleration.z < -0.4f)
                     {
                         direction = "Forward";
                         //material.color = Color.green;
@@ -106,7 +111,11 @@ public class Group : MonoBehaviour {
                         //material.color = Color.blue;
                         //transform.localPosition = new Vector3(0, 0, -0.3f);
                     }
-
+                    //if (Input.gyro.rotationRate.y > 2 || Input.gyro.rotationRate.y < -2)
+                    //{
+                    //    // rotation
+                    //    rotateObject();
+                    //}
                     break;
                 case TouchPhase.Ended:
                     //transform.rotation = localRotation;
@@ -119,24 +128,31 @@ public class Group : MonoBehaviour {
         return direction;
     }
 
-		void rotateObjectZ(){
-			transform.Rotate(0, 0, -90);
+		void rotateObject(){
 
-			if (isValidGridPos())
-				updateGrid();
+			if(rotationCount < 4){
+				transform.Rotate(0, 0, -90);
 
-			else
-				transform.Rotate(0, 0, 90);
-		}
+				if (isValidGridPos())
+					updateGrid();
 
-		void rotateObjectX(){
-			transform.Rotate(-90, 0, 0);
+				else
+					transform.Rotate(0, 0, 90);
+			}
 
-			if (isValidGridPos())
-				updateGrid();
+			else {
+				transform.Rotate(-90, 0, 0);
 
-			else
-				transform.Rotate(90, 0, 0);
+				if (isValidGridPos())
+					updateGrid();
+
+				else
+					transform.Rotate(90, 0, 0);
+
+				rotationCount = 0;
+			}
+
+			rotationCount++;
 		}
 
 		void controlArrows() {
@@ -191,11 +207,7 @@ public class Group : MonoBehaviour {
 
 		// Rotate
 		else if (Input.GetKeyDown(KeyCode.Space)) {
-			rotateObjectZ();
-		}
-
-		else if (Input.GetKeyDown(KeyCode.Backspace)){
-			rotateObjectX();
+			rotateObject();
 		}
 
 		// Move Downwards and Fall
@@ -775,8 +787,6 @@ void controlGestures(){
 								keywordlist = "";
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
-
-								//rotateObjectZ();
 
 								keywordlist = "";
 							}

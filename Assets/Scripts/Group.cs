@@ -15,8 +15,8 @@ public class Group : MonoBehaviour {
 	public GameObject imageTarget;
     private Quaternion localRotation; //
     public float speed = 1.0f; // ajustable speed from Inspector in Unity editor
-		private string pastDirection;
-		private int rotationCount = 0;
+	private string pastDirection;
+	private int rotationCount = 0;
 
 
 	//Credentials for voice recognition service
@@ -39,6 +39,7 @@ public class Group : MonoBehaviour {
 	private int westFlag = 0;
 	private int southFlag = 0;
 	private int northFlag = 0;
+	private int rotateFlag = 0;
 
     // Use this for initializations
     void Start () {
@@ -493,6 +494,14 @@ void controlGestures(){
 			northFlag = 0;
 		}
 
+		if(rotateFlag != 1){
+			Debug.Log ("rotate flag: " + rotateFlag);
+			for(int i = 0; i < rotateFlag; i++){
+				rotateObject ();
+			}
+			rotateFlag = 0;
+		}
+
 			
 	}
 
@@ -787,7 +796,7 @@ void controlGestures(){
 								keywordlist = "";
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
-
+								rotateFlag++;
 								keywordlist = "";
 							}
 						}

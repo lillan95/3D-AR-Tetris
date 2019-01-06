@@ -89,8 +89,12 @@ public class Group : MonoBehaviour {
                         //material.color = Color.red;
                         //transform.localPosition = new Vector3(0.3f, 0, 0);
                     }
-
                     if (Input.acceleration.z < -0.8f)
+                    {
+                        // rotation
+                        rotateObject(); ;
+                    }
+                    else if (Input.acceleration.z < -0.4f)
                     {
                         direction = "Forward";
                         //material.color = Color.green;
@@ -102,7 +106,11 @@ public class Group : MonoBehaviour {
                         //material.color = Color.blue;
                         //transform.localPosition = new Vector3(0, 0, -0.3f);
                     }
-
+                    //if (Input.gyro.rotationRate.y > 2 || Input.gyro.rotationRate.y < -2)
+                    //{
+                    //    // rotation
+                    //    rotateObject();
+                    //}
                     break;
                 case TouchPhase.Ended:
                     //transform.rotation = localRotation;

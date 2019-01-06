@@ -114,6 +114,26 @@ public class Group : MonoBehaviour {
         return direction;
     }
 
+		void rotateObjectZ(){
+			transform.Rotate(0, 0, -90);
+
+			if (isValidGridPos())
+				updateGrid();
+
+			else
+				transform.Rotate(0, 0, 90);
+		}
+
+		void rotateObjectX(){
+			transform.Rotate(-90, 0, 0);
+
+			if (isValidGridPos())
+				updateGrid();
+
+			else
+				transform.Rotate(90, 0, 0);
+		}
+
 		void controlArrows() {
 		// Move Left
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
@@ -166,13 +186,11 @@ public class Group : MonoBehaviour {
 
 		// Rotate
 		else if (Input.GetKeyDown(KeyCode.Space)) {
-			transform.Rotate(0, 0, -90);
+			rotateObjectZ();
+		}
 
-			if (isValidGridPos())
-				updateGrid();
-
-			else
-				transform.Rotate(0, 0, 90);
+		else if (Input.GetKeyDown(KeyCode.Backspace)){
+			rotateObjectX();
 		}
 
 		// Move Downwards and Fall
@@ -714,12 +732,9 @@ void controlGestures(){
 								keywordlist = "";
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
-								transform.Rotate (0, 0, -90);
 
-								if (isValidGridPos ())
-									updateGrid ();
-								else
-									transform.Rotate (0, 0, 90);
+								rotateObjectZ();
+
 								keywordlist = "";
 							}
 						}

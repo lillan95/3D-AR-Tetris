@@ -19,7 +19,7 @@ public class Group : MonoBehaviour {
 
 
 	//Credentials for voice recognition service
-	private string apiKey = "gNgYDJHEX3s5pihSZ0RJtvaqSOXj56JsGehM3iiatHFv";
+	private string apiKey = "7l-Z9nxRuE63DF7xy_I1ZaQQL5GC9uWyQqpeb8BDhD0h";
 	private string serviceURL = "https://stream.watsonplatform.net/speech-to-text/api";
 	private string iamURL = "";
 
@@ -33,6 +33,11 @@ public class Group : MonoBehaviour {
 	private SpeechToText _service;
 	private string transcript;
 	private string command;
+
+	private int eastFlag = 0;
+	private int westFlag = 0;
+	private int southFlag = 0;
+	private int northFlag = 0;
 
     // Use this for initializations
     void Start () {
@@ -443,6 +448,40 @@ void controlGestures(){
 				controlArrows();
 			}
 			controlGestures();
+
+		if(eastFlag != 1){
+			Debug.Log ("eastflag: " + eastFlag);
+			for (int i = 0; i < eastFlag; i++) {
+				voiceControl ("Right");
+			}
+			eastFlag = 0;
+		}
+
+		if (westFlag != 1) {
+			Debug.Log ("westflag: " + westFlag);
+			for (int i = 0; i < westFlag; i++) {
+				voiceControl ("Left");
+			}
+			westFlag = 0;
+		}
+
+		if (southFlag != 1) {
+			Debug.Log ("southFlag: " + southFlag);
+			for (int i = 0; i < southFlag; i++) {
+				voiceControl ("Backward");
+			}
+			southFlag = 0;
+		}
+
+		if (northFlag != 1) {
+			Debug.Log ("north flag: " + northFlag);
+			for (int i = 0; i < northFlag; i++) {
+				voiceControl ("Forward");
+			}
+			northFlag = 0;
+		}
+
+			
 	}
 
 	bool isValidGridPos() {        // 2D So far
@@ -716,24 +755,28 @@ void controlGestures(){
 						if(keyword.confidence>0.01){
 							if (keywordlist.Contains ("east")) {
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Right");
+								//voiceControl ("Right");
+								eastFlag++;
 								keywordlist = "";
 							} else if(keywordlist.Contains ("west")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Left");
+								//voiceControl ("Left");
+								westFlag++;
 								keywordlist = "";
 							} else if(keywordlist.Contains ("north")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Forward");
+								//voiceControl ("Forward");
+								northFlag++;
 								keywordlist = "";
 							} else if(keywordlist.Contains ("south")){
 								Debug.Log ("keyword: " + keywordlist);
-								voiceControl ("Backward");
+								//voiceControl ("Backward");
+								southFlag++;
 								keywordlist = "";
 							} else if(keywordlist.Contains ("rotate")){
 								Debug.Log ("keyword: " + keywordlist);
 
-								rotateObjectZ();
+								//rotateObjectZ();
 
 								keywordlist = "";
 							}

@@ -76,26 +76,30 @@ public class Group : MonoBehaviour {
                 case TouchPhase.Moved:
                     //material.color = Color.green;
 
-                    if (Input.acceleration.x < -0.9)
+                    if (Input.acceleration.x < -0.8f)
                     {
                         direction = "Left";
-                        //localRotation.x = -1;
+                        //material.color = Color.yellow;
+                        //transform.localPosition = new Vector3(-0.3f, 0, 0);
                     }
-                    else if (Input.acceleration.x > 0.9)
+                    if (Input.acceleration.x > 0.8f)
                     {
                         direction = "Right";
-                        //localRotation.x = 1;
+                        //material.color = Color.red;
+                        //transform.localPosition = new Vector3(0.3f, 0, 0);
                     }
 
-                    else if (Input.acceleration.z < -0.9)
+                    if (Input.acceleration.z < -0.8f)
                     {
                         direction = "Forward";
-                        //localRotation.z = -1;
+                        //material.color = Color.green;
+                        //transform.localPosition = new Vector3(0, 0, 0.3f);
                     }
-                    else if(Input.acceleration.z > 0.9)
+                    if (Input.acceleration.z > -0.0f)
                     {
                         direction = "Backward";
-                        //localRotation.z = 1;
+                        //material.color = Color.blue;
+                        //transform.localPosition = new Vector3(0, 0, -0.3f);
                     }
 
                     break;
